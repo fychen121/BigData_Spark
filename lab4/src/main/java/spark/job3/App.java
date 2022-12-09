@@ -23,7 +23,7 @@ public class App{
         try (JavaSparkContext job3 = new JavaSparkContext(conf)) { 
        
             JavaRDD<String> lines = job3.textFile("/Users/ff/Desktop/data/stock_data.csv");
-            List<String> codes = job3.textFile("/Users/ff/Desktop/job3_2/part-00000").collect();
+            List<String> codes = job3.textFile("/Users/ff/Desktop/job3_2/part-00000").collect(); // 股票代码文件
             JavaRDD<LabeledPoint> data = lines.map(new Function<String, LabeledPoint>() {
                 private static final long serialVersionUID = 1L;
                 @Override
