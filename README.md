@@ -6,7 +6,7 @@
 
 ##### 第一问：
 
-​	1.mapToPair转化为JavaRDD<String, Integer>
+​	1.mapToPair转化为JavaRDD<String, Long>
 
 ​	2.reduceByKey统计交易量
 
