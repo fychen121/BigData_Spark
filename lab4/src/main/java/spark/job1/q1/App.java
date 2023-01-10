@@ -20,32 +20,32 @@ public class App
             JavaRDD<String> lines = job1_1.textFile("/Users/ff/Desktop/data/stock_small.csv");
 
             //转换为键值对
-            JavaPairRDD<String, Integer> KeyValueRdd = lines.mapToPair(new PairFunction<String, String, Integer>() {
+            JavaPairRDD<String, Long> KeyValueRdd = lines.mapToPair(new PairFunction<String, String, Long>() {
                 @Override
-                public Tuple2<String, Integer> call(String s) throws Exception {
+                public Tuple2<String, Long> call(String s) throws Exception {
                     String[] s_list = s.split(",");
                     String key =  s_list[2].substring(0,4) + " " + s_list[1];
-                    Integer value = Integer.parseInt(s_list[7]);
-                    Tuple2<String, Integer> stock = new Tuple2<>(key, value);
+                    Long value = Long.parseLong(s_list[7]);
+                    Tuple2<String, Long> stock = new Tuple2<>(key, value);
                     return stock;
                 }
             });
 
-            JavaPairRDD<String, Integer> countRDD = KeyValueRdd.reduceByKey(new Function2<Integer, Integer, Integer>() {
+            JavaPairRDD<String, Long> countRDD = KeyValueRdd.reduceByKey(new Function2<Long, Long, Long>() {
                 @Override
-                public Integer call(Integer integer, Integer integer2) throws Exception {
-                    return integer + integer2;
+                public Long call(Long Long, Long Long2) throws Exception {
+                    return Long + Long2;
                 }
             });
 
-            JavaPairRDD<String, Integer> sortRDD = countRDD.mapToPair(f -> new Tuple2<Integer,String>(f._2,f._1)).sortByKey(false).mapToPair(f -> new Tuple2<String, Integer>(f._2,f._1));
+            JavaPairRDD<String, Long> sortRDD = countRDD.mapToPair(f -> new Tuple2<Long,String>(f._2,f._1)).sortByKey(false).mapToPair(f -> new Tuple2<String, Long>(f._2,f._1));
 
-            JavaPairRDD<String, String> newKeyValueRDD = sortRDD.mapToPair(new PairFunction<Tuple2<String, Integer>, String, String>() {
+            JavaPairRDD<String, String> newKeyValueRDD = sortRDD.mapToPair(new PairFunction<Tuple2<String, Long>, String, String>() {
 
                 @Override
-                public Tuple2<String, String> call(Tuple2<String, Integer> t) throws Exception {
+                public Tuple2<String, String> call(Tuple2<String, Long> t) throws Exception {
                     String new_key = t._1.substring(0,4);
-                    String new_value = t._1.substring(5) + " " + Integer.toString(t._2());
+                    String new_value = t._1.substring(5) + " " + Long.toString(t._2());
                     Tuple2<String, String> result = new Tuple2<>(new_key, new_value);
                     return result;
                 }
